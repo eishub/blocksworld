@@ -1,4 +1,4 @@
-blocksworld
+The Blocks World
 ===========
 
 The Blocks World is a classic and famous toy domain in Artificial Intelligence.
