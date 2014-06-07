@@ -6,6 +6,29 @@
 	<version>1.0.0</version>
 	<name>blocksworld</name>
 	<description>Stack blocks to towers. You can only move the top blocks.</description>
+	<url>http://github.com/eishub/blocksworld/</url>
+
+	<licenses>
+		<license>
+			<name>GNU General Public License (GPL)</name>
+			<url>http://www.gnu.org/licenses/gpl.html</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>K.V.Hindriks</name>
+			<email>K.V.Hindriks@TUDelft.nl</email>
+			<organization>TU Delft</organization>
+			<organizationUrl>http://www.tudelft.nl</organizationUrl>
+		</developer>
+		<developer>
+			<name>W.Pasman</name>
+			<email>W.Pasman@TUDelft.nl</email>
+			<organization>TU Delft</organization>
+			<organizationUrl>http://www.tudelft.nl</organizationUrl>
+		</developer>
+	</developers>
 
 	<repositories>
 		<repository>
