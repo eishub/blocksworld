@@ -43,9 +43,12 @@
 					</execution>
 				</executions>
 				<configuration>
-					<doCheck>false</doCheck>
+					<doCheck>true</doCheck>
 					<doUpdate>true</doUpdate>
-					<shortRevisionLength>5</shortRevisionLength>
+					<format>{0,date,yyyy-MM-dd}</format>
+					<items>
+						<item>timestamp</item>
+					</items>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -77,11 +80,15 @@
 		</plugins>
 	</build>
 
-	<repositories>
+	<repositories>		
 		<repository>
-			<id>ii.tudelft.nl</id>
-			<url>https://ii.tudelft.nl/maven/</url>
-		</repository>
+            <id>eis-releases</id>
+            <url>https://raw.github.com/eishub/eis/releases/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
 	</repositories>
 
 	<dependencies>
