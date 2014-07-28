@@ -1,4 +1,4 @@
-package blocksworld;
+package environment;
 
 import java.util.ArrayList;
 import java.util.Collection;

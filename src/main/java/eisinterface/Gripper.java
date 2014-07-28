@@ -1,14 +1,14 @@
-package nl.tudelft.blocksworld;
+package eisinterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.tudelft.blocksworld.BWEnvironment;
-import blocksworld.BlocksWorldModel;
-import blocksworld.Cube3D;
 import eis.eis2java.annotation.AsAction;
 import eis.eis2java.annotation.AsPercept;
 import eis.exceptions.ActException;
+import eisinterface.BWEnvironment;
+import environment.BlocksWorldModel;
+import environment.Cube3D;
 
 /**
  * this is the EIS entity that is plugged into the EIS2Java environment.

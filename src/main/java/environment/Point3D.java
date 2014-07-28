@@ -1,4 +1,4 @@
-package blocksworld;
+package environment;
 
 /** BlocksWorld.java, version 1.11, December 9, 1998.
  Applet for interactive blocks world.

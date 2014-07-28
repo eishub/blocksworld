@@ -1,4 +1,4 @@
-package nl.tudelft.blocksworld;
+package eisinterface;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,9 +9,6 @@ import java.util.Scanner;
 
 import org.apache.commons.io.FilenameUtils;
 
-import blocksworld.BlocksWorldModel;
-import blocksworld.BlocksWorldPainter;
-import blocksworld.Cube3D;
 import eis.eis2java.environment.AbstractEnvironment;
 import eis.exceptions.EntityException;
 import eis.exceptions.ManagementException;
@@ -21,6 +18,9 @@ import eis.iilang.Identifier;
 import eis.iilang.Numeral;
 import eis.iilang.Parameter;
 import eis.iilang.ParameterList;
+import environment.BlocksWorldModel;
+import environment.BlocksWorldPainter;
+import environment.Cube3D;
 
 /**
  * EIS2Java layer for the 3D Blocks World environment.
@@ -42,7 +42,10 @@ public class BWEnvironment extends AbstractEnvironment {
 
 	@Override
 	protected boolean isSupportedByEnvironment(Action action) {
-		return true;
+		if (action.getName().equals("move") && action.getParameters().size()==2) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -61,10 +64,12 @@ public class BWEnvironment extends AbstractEnvironment {
 						.getValue().equals("true"))) {
 			gui = new BlocksWorldPainter(model);
 		}
+		
+		// Try creating and registering an entity called gripper.
 		try {
 			registerEntity("gripper", new Gripper(model));
 		} catch (EntityException e) {
-			throw new ManagementException("failed to create new entity", e);
+			throw new ManagementException("Could not create a gripper", e);
 		}
 	}
 

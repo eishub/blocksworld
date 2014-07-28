@@ -1,4 +1,4 @@
-package blocksworld;
+package environment;
 
 /** BlocksWorld.java, version 1.11, December 9, 1998.
  Applet for interactive blocks world.
@@ -32,7 +32,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import nl.tudelft.blocksworld.BWEnvironment;
+import eisinterface.BWEnvironment;
 
 /**
  * This is an educational example of object oriented design for a 3D graphics

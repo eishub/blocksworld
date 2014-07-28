@@ -1,12 +1,13 @@
-package generator;
+package worldgenerator;
 
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Vector;
 
 /**
- * Class to generate random worlds for Blocks World. This class is an adapted
- * version of the C program by John Slaney at
+ * Generates random configurations for the Blocks World.
+ * 
+ * This generator has been adapted from the C program written by John Slaney at
  * http://users.cecs.anu.edu.au/~jks/bwstates.html.
  * 
  * @author D.Singh
@@ -23,6 +24,15 @@ public class RandomWorldGenerator {
 
 	private HashMap<String, Integer> stats;
 
+	/**
+	 * Random configuration generator.
+	 * 
+	 * @param N
+	 * 		number of blocks
+	 * @param seed
+	 * 		random seed
+	 * @param buildStatistics
+	 */
 	public RandomWorldGenerator(int N, long seed, boolean buildStatistics) {
 		if (buildStatistics) {
 			this.stats = new HashMap<String, Integer>();
@@ -36,29 +46,37 @@ public class RandomWorldGenerator {
 	}
 
 	/**
-	 * Convenience function to test the class. Note that n>6 with i>100000 will
-	 * already take a long tim to run. The reason is that the bookkeeping
-	 * search/updates takes longer. For normal use, statisitcs should be
-	 * disabled.
-	 * */
+	 * Generate configurations from command line.
+	 * 
+	 * Usage: <numberr of blocks> <seed number> <number of iterations>
+	 * 
+	 * Note that n>6 with i>100000 will already take a long time to run.
+	 * The reason is that the bookkeeping search/updates takes longer.
+	 * For this reason, by default, statistics has been disabled.
+	 *
+	 */
 	public static void main(String[] args) {
-		int n = 5, seed = 0, loop = 1;
-		if (args.length > 0) {
-			try {
-				n = Integer.parseInt(args[0]);
-				seed = Integer.parseInt(args[1]);
-				loop = Integer.parseInt(args[2]);
-			} catch (Exception e) {
-				System.err.println("usage: numblocks seed iterations");
-				System.exit(0);
+		int n, seed, loop;
+		
+		try {
+			n = Integer.parseInt(args[0]);
+			seed = Integer.parseInt(args[1]);
+			loop = Integer.parseInt(args[2]);
+			
+			RandomWorldGenerator r = new RandomWorldGenerator(n, seed, false);
+			for (int i = 0; i < loop; i++) {
+				System.out.println(r.nextState());
 			}
-		}
-		RandomWorldGenerator r = new RandomWorldGenerator(n, seed, false);
-		for (int i = 0; i < loop; i++) {
-			System.out.println(r.nextState());
+		} catch (Exception e) {
+			System.err.println("usage: <nr of blocks> <seed nr> <nr of iterations>");
+			System.exit(0);
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String nextState() {
 		make_state(sigma, ratio);
 		String state = print_state(sigma);
@@ -71,7 +89,7 @@ public class RandomWorldGenerator {
 	}
 
 	/**
-	 * This function is called during initialisation.
+	 * This function is called during initialization.
 	 * 
 	 * The function g is easily defined recursively:<br>
 	 * g(0,k) = 1 <br>
@@ -189,21 +207,22 @@ public class RandomWorldGenerator {
 	}
 
 	/**
-	 * convert generated state to a comman-separated string. This matches
-	 * Slaney's original output format.
+	 * Convert generated state to a comma-separated string.
+	 * This matches Slaney's original output format.
 	 * 
 	 * @param sigma
-	 * @return slaney-style block configuration list.
+	 * @return Slaney-style block configuration list.
 	 */
 	private String print_state(Sigma sigma) {
 		String out = "";
+
 		for (int x = 0; x < sigma.N; x++) {
 			out += sigma.S.get(x) + 1;
 			if (x < sigma.N - 1)
 				out += ",";
 		}
+		
 		return out;
-
 	}
 
 	/**
@@ -248,7 +267,7 @@ public class RandomWorldGenerator {
 	 * using MATLAB for instance.
 	 * 
 	 * @author D.Singh
-	 * **/
+	 */
 	public String print_statistics() {
 		if (stats == null) {
 			return "No statistics are available. Must be enabled at startup.";
@@ -280,6 +299,9 @@ public class RandomWorldGenerator {
 		return str;
 	}
 
+	/**
+	 *
+	 */
 	class Tower {
 		int top;
 		int bottom;
@@ -290,6 +312,9 @@ public class RandomWorldGenerator {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	class Sigma {
 		int N;
 		Vector<Integer> S;
@@ -305,4 +330,5 @@ public class RandomWorldGenerator {
 			floating = new Vector<Tower>();
 		}
 	}
+
 }
