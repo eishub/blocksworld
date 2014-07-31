@@ -25,6 +25,10 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,12 +151,25 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 				saveWindowDimensions();
 			}
 		});
+		
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				handleMousePressed(e, e.getX(), e.getY());
+			}
+		});
+		
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				handleKeyPressed(e, e.getKeyCode());
+			}
+		});
 	}
 
 	private void saveWindowDimensions() {
 		BlocksWorldSettings.setWindowParams(getX(), getY(), getWidth(),
 				getHeight());
-
 	}
 
 	/**
@@ -275,6 +292,16 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 		this.paint(grOffScreen);
 		g.drawImage(imOffScreen, 0, 0, null);
 	}
+	
+	/**
+	 * 
+	 * @param MouseEvent
+	 * @return
+	 */
+	public boolean processMouseEvent(Event MouseEvent) {
+		showStatus("MOUSE PRESSED");
+		return true;
+	}
 
 	/**
 	 * Select a block for source or destination: bSelectedDest is initially
@@ -282,8 +309,7 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 	 * nearest (in 2D screen space) to the mouse click point gets selected. This
 	 * is really a 2D estimation and therefore it is part of the GUI.
 	 */
-	public boolean mouseDown(Event e, int x, int y) {
-
+	private boolean handleMousePressed(MouseEvent e, int x, int y) {
 		Point ptBCP = new Point(0, 0); // Block center point
 		Cube3D iClosestBlock = world.get(0);
 		float sfDSquared = 0;
@@ -366,7 +392,7 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 	/**
 	 * user presses key
 	 */
-	public boolean keyDown(Event e, int k) {
+	private boolean handleKeyPressed(KeyEvent e, int k) {
 		switch (k) {
 		case 32: // Space bar
 		{
