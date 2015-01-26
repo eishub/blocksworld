@@ -17,3 +17,22 @@ Releases can also be found in eishub's maven repository  [here](https://github.c
 Run `mvn clean install`
 
 Run `mvn clean pre-site install` to also generate the pdf manual from the tex source.
+
+Dependency information 
+=====================
+
+```
+<repository>
+ <id>eishub-mvn-repo</id>
+ <url>https://raw.github.com/eishub/mvn-repo/master</url>
+</repository>
+```
+	
+```	
+<dependency>
+	<groupId>eishub</groupId>
+	<artifactId>blocksworld</artifactId>
+	<version>1.1.1-SNAPSHOT</version>
+</dependency>
+```
+
