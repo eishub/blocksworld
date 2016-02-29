@@ -119,8 +119,7 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 	 * @return applet info string.
 	 */
 	public String getAppletInfo() {
-		return "BlocksWorld applet, version " + sVerNum
-				+ ", by Rick Wagner, copyright 1998,\nall rights reserved.\n\n"
+		return "BlocksWorld applet, version " + sVerNum + ", by Rick Wagner, copyright 1998,\nall rights reserved.\n\n"
 				+ "This is an educational example of object oriented design.\n"
 				+ "Compiled December 9, 1998. Source code use authorized for\n"
 				+ "educational purposes only. No use without attribution.";
@@ -129,8 +128,7 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 	public BlocksWorldPainter(BlocksWorldModel model) {
 		world = model;
 		setMinimumSize(new Dimension(320, 200));
-		setSize(new Dimension(BlocksWorldSettings.getWidth(),
-				BlocksWorldSettings.getHeight()));
+		setSize(new Dimension(BlocksWorldSettings.getWidth(), BlocksWorldSettings.getHeight()));
 		setLocation(BlocksWorldSettings.getX(), BlocksWorldSettings.getY());
 		init();
 		// pack(); no pack, as we don't have a canvas yet.
@@ -151,25 +149,30 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 				saveWindowDimensions();
 			}
 		});
-		
+
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				handleMousePressed(e, e.getX(), e.getY());
 			}
 		});
-		
+
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				handleKeyPressed(e, e.getKeyCode());
+				char c = e.getKeyChar();
+				// returns UNICODE char. But arrows have no unicode char...
+				if (c == KeyEvent.CHAR_UNDEFINED) {
+					handleKeyCodePressed(e.getKeyCode());
+				} else {
+					handleKeyPressed(c);
+				}
 			}
 		});
 	}
 
 	private void saveWindowDimensions() {
-		BlocksWorldSettings.setWindowParams(getX(), getY(), getWidth(),
-				getHeight());
+		BlocksWorldSettings.setWindowParams(getX(), getY(), getWidth(), getHeight());
 	}
 
 	/**
@@ -224,8 +227,9 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 
 		g.clearRect(0, 0, width, height);
 
-		vp = new Point3D(-ViewPoint.getX(), -ViewPoint.getY(),
-				-ViewPoint.getZ()); // Opposite view point
+		vp = new Point3D(-ViewPoint.getX(), -ViewPoint.getY(), -ViewPoint.getZ()); // Opposite
+																					// view
+																					// point
 
 		/**
 		 * Painter's algorithm. Works with BlocksWorld where all the faces are
@@ -280,8 +284,7 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 	public void update(Graphics g) {
 		int width = getWidth();
 		int height = getHeight();
-		if (imOffScreen == null || imOffScreen.getWidth(null) != width
-				|| imOffScreen.getHeight(null) != height) {
+		if (imOffScreen == null || imOffScreen.getWidth(null) != width || imOffScreen.getHeight(null) != height) {
 
 			// System.out.println("rescale of window detected. Resizing");
 			// Make sure the offscreen and graphics exist
@@ -292,7 +295,7 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 		this.paint(grOffScreen);
 		g.drawImage(imOffScreen, 0, 0, null);
 	}
-	
+
 	/**
 	 * 
 	 * @param MouseEvent
@@ -328,8 +331,7 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 															// perspective view
 			ptBCP.x = getWidth() / 2 + ((int) (TempPoint.getX() * sfAdjust));
 			ptBCP.y = getHeight() / 2 - ((int) (TempPoint.getY() * sfAdjust));
-			sfDSquared = (ptBCP.x - x) * (ptBCP.x - x) + (ptBCP.y - y)
-					* (ptBCP.y - y);
+			sfDSquared = (ptBCP.x - x) * (ptBCP.x - x) + (ptBCP.y - y) * (ptBCP.y - y);
 			if (sfDSquared < sfMin) {
 				sfMin = sfDSquared;
 				iClosestBlock = block;
@@ -337,8 +339,7 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 		}
 		if (sfMin > MAX_CLICK_DISTANCE) {
 			if (bSelectedDest) {
-				showStatus("move " + BWEnvironment.blockName(iSourceBlock)
-						+ " to floor");
+				showStatus("move " + BWEnvironment.blockName(iSourceBlock) + " to floor");
 				bSelectedDest = false; // Toggle the selection state
 				iSourceBlock.setSelected(false);
 				world.move(iSourceBlock, null);
@@ -351,9 +352,8 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 
 		if (iClosestBlock.topBlock()) {
 			if (bSelectedDest && iClosestBlock == iSourceBlock) {
-				this.showStatus("Block "
-						+ BWEnvironment.blockName(iClosestBlock)
-						+ " cannot be stacked on top of itself.");
+				this.showStatus(
+						"Block " + BWEnvironment.blockName(iClosestBlock) + " cannot be stacked on top of itself.");
 			} else {
 				if (bSelectedDest) {
 					// We are selecting the destination block for stacking the
@@ -363,16 +363,12 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 					iSourceBlock.setSelected(false);
 					world.move(iSourceBlock, iDestBlock);
 
-					this.showStatus("Block "
-							+ BWEnvironment.blockName(iSourceBlock)
-							+ " stacked on block "
+					this.showStatus("Block " + BWEnvironment.blockName(iSourceBlock) + " stacked on block "
 							+ BWEnvironment.blockName(iDestBlock) + ".");
 				} else {
 					// We are selecting the source block for stacking on the
 					// next block selected
-					this.showStatus("Block "
-							+ BWEnvironment.blockName(iClosestBlock)
-							+ " selected.");
+					this.showStatus("Block " + BWEnvironment.blockName(iClosestBlock) + " selected.");
 
 					// Change the selected block color to red and redisplay:
 					iClosestBlock.setSelected(true);
@@ -383,16 +379,57 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 				}
 			}
 		} else {
-			this.showStatus("Block " + BWEnvironment.blockName(iClosestBlock)
-					+ " has a block above it.");
+			this.showStatus("Block " + BWEnvironment.blockName(iClosestBlock) + " has a block above it.");
 		}
 		return true;
 	}
 
 	/**
-	 * user presses key
+	 * An arrow key was pressed. We can only handle this through the key's code.
+	 * 
+	 * @param code
+	 *            the key code.
 	 */
-	private boolean handleKeyPressed(KeyEvent e, int k) {
+	public void handleKeyCodePressed(int code) {
+		switch (code) {
+		case KeyEvent.VK_UP: {
+			sfPanX += (float) 1;
+			SetupPerspXform();
+			repaint();
+			this.showStatus("Panned up one degree.");
+			break;
+		}
+		case KeyEvent.VK_DOWN: {
+			sfPanX -= (float) 1;
+			SetupPerspXform();
+			repaint();
+			this.showStatus("Panned down one degree.");
+			break;
+		}
+		case KeyEvent.VK_LEFT: {
+			sfPanY += (float) 1;
+			SetupPerspXform();
+			repaint();
+			this.showStatus("Panned left one degree.");
+			break;
+		}
+		case KeyEvent.VK_RIGHT: {
+			sfPanY -= (float) 1;
+			SetupPerspXform();
+			repaint();
+			this.showStatus("Panned left one degree.");
+			break;
+		}
+		}
+	}
+
+	/**
+	 * user presses key k.
+	 * 
+	 * @param k
+	 *            the key ascii character code.
+	 */
+	private boolean handleKeyPressed(char k) {
 		switch (k) {
 		case 32: // Space bar
 		{
@@ -407,8 +444,7 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 			sfXPosition += (float) 10;
 			SetupPerspXform(); // Translates right 10
 			repaint();
-			this.showStatus("Moved right by 10 to "
-					+ Integer.toString((int) sfXPosition) + ".");
+			this.showStatus("Moved right by 10 to " + Integer.toString((int) sfXPosition) + ".");
 			break;
 		}
 		case 89: // Y (translate up)
@@ -416,8 +452,7 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 			sfYPosition += (float) 10;
 			SetupPerspXform(); // Translates up 10
 			repaint();
-			this.showStatus("Moved up by 10 to "
-					+ Integer.toString((int) sfYPosition) + ".");
+			this.showStatus("Moved up by 10 to " + Integer.toString((int) sfYPosition) + ".");
 			break;
 		}
 		case 102: // f (farther)
@@ -461,8 +496,7 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 			sfXPosition -= (float) 10;
 			SetupPerspXform(); // Translates left 10
 			repaint();
-			this.showStatus("Moved left by 10 to "
-					+ Integer.toString((int) sfXPosition) + ".");
+			this.showStatus("Moved left by 10 to " + Integer.toString((int) sfXPosition) + ".");
 			break;
 		}
 		case 121: // y (translate down)
@@ -470,40 +504,7 @@ public class BlocksWorldPainter extends Frame implements ChangeListener {
 			sfYPosition -= (float) 10;
 			SetupPerspXform(); // Translates down 10
 			repaint();
-			this.showStatus("Moved down by 10 to "
-					+ Integer.toString((int) sfYPosition) + ".");
-			break;
-		}
-		case 1004: // Up arrow (pan up)
-		{
-			sfPanX += (float) 1;
-			SetupPerspXform();
-			repaint();
-			this.showStatus("Panned up one degree.");
-			break;
-		}
-		case 1005: // Down arrow (pan down)
-		{
-			sfPanX -= (float) 1;
-			SetupPerspXform();
-			repaint();
-			this.showStatus("Panned down one degree.");
-			break;
-		}
-		case 1006: // Left arrow (pan left)
-		{
-			sfPanY += (float) 1;
-			SetupPerspXform();
-			repaint();
-			this.showStatus("Panned left one degree.");
-			break;
-		}
-		case 1007: // Right arrow (pan right)
-		{
-			sfPanY -= (float) 1;
-			SetupPerspXform();
-			repaint();
-			this.showStatus("Panned left one degree.");
+			this.showStatus("Moved down by 10 to " + Integer.toString((int) sfYPosition) + ".");
 			break;
 		}
 		}
