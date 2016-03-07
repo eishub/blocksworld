@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import org.apache.commons.io.FilenameUtils;
-
 import eis.eis2java.environment.AbstractEnvironment;
 import eis.exceptions.EntityException;
 import eis.exceptions.ManagementException;
@@ -42,7 +40,7 @@ public class BWEnvironment extends AbstractEnvironment {
 
 	@Override
 	protected boolean isSupportedByEnvironment(Action action) {
-		if (action.getName().equals("move") && action.getParameters().size()==2) {
+		if (action.getName().equals("move") && action.getParameters().size() == 2) {
 			return true;
 		}
 		return false;
@@ -54,17 +52,14 @@ public class BWEnvironment extends AbstractEnvironment {
 	}
 
 	@Override
-	public void init(Map<String, Parameter> parameters)
-			throws ManagementException {
+	public void init(Map<String, Parameter> parameters) throws ManagementException {
 
 		reset(parameters); // create the model.
 		Parameter usegui = parameters.get("gui");
-		if (usegui == null
-				|| (usegui instanceof Identifier && ((Identifier) usegui)
-						.getValue().equals("true"))) {
+		if (usegui == null || (usegui instanceof Identifier && ((Identifier) usegui).getValue().equals("true"))) {
 			gui = new BlocksWorldPainter(model);
 		}
-		
+
 		// Try creating and registering an entity called gripper.
 		try {
 			registerEntity("gripper", new Gripper(model));
@@ -75,8 +70,8 @@ public class BWEnvironment extends AbstractEnvironment {
 
 	/**
 	 * Creates a new model if not already there. If there is already a model, it
-	 * resets the model to the given new size. Resets the environment(-interface)
-	 * with a set of key-value-pairs.
+	 * resets the model to the given new size. Resets the
+	 * environment(-interface) with a set of key-value-pairs.
 	 * 
 	 * @param parameters
 	 * @throws ManagementException
@@ -84,8 +79,7 @@ public class BWEnvironment extends AbstractEnvironment {
 	 *             the parameters are wrong.
 	 */
 	@Override
-	public void reset(Map<String, Parameter> parameters)
-			throws ManagementException {
+	public void reset(Map<String, Parameter> parameters) throws ManagementException {
 
 		// get the start config and check its type
 		ParameterList start;
@@ -95,16 +89,13 @@ public class BWEnvironment extends AbstractEnvironment {
 				start = (ParameterList) start1;
 			} else if (start1 instanceof Identifier) {
 				try {
-					start = readNumbersFromFile(((Identifier) start1)
-							.getValue());
+					start = readNumbersFromFile(((Identifier) start1).getValue());
 				} catch (FileNotFoundException e) {
-					throw new ManagementException("failed to read initial configuration from file "
-							+ start1, e);
+					throw new ManagementException("failed to read initial configuration from file " + start1, e);
 				}
 			} else {
 				throw new IllegalArgumentException(
-						"expected a list or a filename for initializing the blocks configuration but found "
-								+ start1);
+						"expected a list or a filename for initializing the blocks configuration but found " + start1);
 			}
 		} else {
 			// no start info, use default world with 8 blocks on table.
@@ -118,8 +109,7 @@ public class BWEnvironment extends AbstractEnvironment {
 		List<Integer> startlist = new ArrayList<Integer>();
 		for (Parameter n : start) {
 			if (!(n instanceof Numeral)) {
-				throw new IllegalArgumentException(
-						"List should contain only numbers but found " + n);
+				throw new IllegalArgumentException("List should contain only numbers but found " + n);
 			}
 			startlist.add(((Numeral) n).getValue().intValue());
 		}
@@ -140,20 +130,17 @@ public class BWEnvironment extends AbstractEnvironment {
 	 * @return parameterlist with the numbers in the file.
 	 * @throws FileNotFoundException
 	 */
-	private ParameterList readNumbersFromFile(String filename)
-			throws FileNotFoundException {
+	private ParameterList readNumbersFromFile(String filename) throws FileNotFoundException {
 
 		ParameterList list = new ParameterList();
+		// first try if filename is absolute path.
 		File file = new File(filename);
 
 		if (!file.exists()) {
-			// try to locate file relative to folder where environment interface jar can be found
-			String path = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
-			// remove jar file
-			path = FilenameUtils.getPath(path);
-			// add file name
-			path = FilenameUtils.concat(path, filename);
-			file = new File(path);
+			// failed, try relative path, relative to folder where environment
+			// interface jar can be found
+			File envfile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
+			file = new File(envfile.getParentFile(), filename);
 		}
 		Scanner sc = new Scanner(file);
 		while (sc.hasNextInt()) {
@@ -174,7 +161,6 @@ public class BWEnvironment extends AbstractEnvironment {
 		model = null;
 		setState(EnvironmentState.KILLED);
 	}
-	
 
 	/**
 	 * Get name for block. null="table", block n="b"<n>
