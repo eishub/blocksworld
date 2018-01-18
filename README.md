@@ -32,7 +32,7 @@ Dependency information
 <dependency>
 	<groupId>eishub</groupId>
 	<artifactId>blocksworld</artifactId>
-	<version>1.1.1-SNAPSHOT</version>
+	<version>1.2.0</version>
 </dependency>
 ```
 
