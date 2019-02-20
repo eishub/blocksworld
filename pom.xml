@@ -1,6 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>eishub</groupId>
 	<artifactId>blocksworld</artifactId>
 	<version>1.1.2-SNAPSHOT</version>
@@ -27,7 +29,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<github.global.server>github</github.global.server>
 	</properties>
-	
+
 	<repositories>
 		<repository>
 			<id>eishub-mvn-repo</id>
@@ -38,87 +40,49 @@
 			</snapshots>
 		</repository>
 	</repositories>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>eishub</groupId>
 			<artifactId>eis</artifactId>
-			<version>0.5.0</version>
+			<version>0.6.1</version>
 		</dependency>
+
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.4</version>
+			<version>2.6</version>
 		</dependency>
 	</dependencies>
 
 	<distributionManagement>
 		<repository>
-        	<id>internal.repo</id>
-        	<name>Temporary Staging Repository</name>
-        	<url>file://${project.build.directory}/mvn-repo</url>
-        </repository>
+			<id>internal.repo</id>
+			<name>Temporary Staging Repository</name>
+			<url>file://${project.build.directory}/mvn-repo</url>
+		</repository>
 	</distributionManagement>
-	
+
 	<scm>
-		<!-- used by the buildnumber plugin -->
 		<connection>scm:git:https://github.com/eishub/blocksworld.git</connection>
 	</scm>
 
 	<build>
 		<plugins>
-
 			<plugin>
-        		<groupId>org.apache.maven.plugins</groupId>
-        		<artifactId>maven-jar-plugin</artifactId>
-        		<version>2.5</version>
-        		<configuration>
-          			<archive>
-            			<manifest>
-              				<addClasspath>true</addClasspath>
-              				<mainClass>${main.class.package}.${main.class}</mainClass>
-            			</manifest>
-          			</archive>
-        		</configuration>
-        		<!-- Yes I know: http://blog.sonatype.com/2010/01/how-to-create-two-jars-from-one-project-and-why-you-shouldnt/ -->
-        		<!-- Right now, it's just not worth the effort and a pity to mess up the directory structure. -->
-        		<!-- Perhaps we'll get back to this later. -->
-        		<executions>
-        			<!-- Generate the blocksworld.jar -->
-        			<execution>
-        				<id>blocksworld</id>
-        				<goals><goal>jar</goal></goals>
-        				<phase>package</phase>
-        				<configuration>
-        					<archive>
-            					<manifest>
-              						<addClasspath>true</addClasspath>
-              						<mainClass>${main.class.package}.${main.class}</mainClass>
-            					</manifest>
-          					</archive>
-        					<classifier>blocksworld</classifier>
-        					<excludes>
-        						<exclude>**/worldgenerator*</exclude>
-        					</excludes>
-        				</configuration>
-        			</execution>
-        			<!-- Generate the worldgenerator.jar -->
-        			<execution>
-						<id>worldgenerator</id>
-						<goals><goal>jar</goal></goals>
-						<phase>package</phase>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<id>analyze</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>analyze-only</goal>
+						</goals>
 						<configuration>
-        					<archive>
-            					<manifest>
-              						<addClasspath>true</addClasspath>
-              						<mainClass>worldgenerator.RandomWorldGenerator</mainClass>
-            					</manifest>
-          					</archive>
-							<classifier>worldgenerator</classifier>
-							<excludes>
-								<exclude>**/eishub</exclude>
-								<exclude>**/environment</exclude>
-							</excludes>
+							<failOnWarning>true</failOnWarning>
+							<ignoreNonCompile>true</ignoreNonCompile>
 						</configuration>
 					</execution>
 				</executions>
@@ -126,22 +90,18 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.5</version>
+				<version>2.10.4</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -153,51 +113,108 @@
 			</plugin>
 
 			<plugin>
-				<!-- See: http://akquinet.github.io/maven-latex-plugin/ -->
-                <groupId>de.akquinet.jbosscc.latex</groupId>
-                <artifactId>maven-latex-plugin</artifactId>
-                <version>1.2</version>
-                <inherited>false</inherited>
-                <configuration>
-                	<settings>
-                		<!-- all tex main documents in this folder (including subfolders) will be processed -->
-                		<texDirectory>${basedir}/src/main/latex</texDirectory>
-                		<!-- the generated artifacts will be copied to ${project.build.directory}/doc -->
-                		<!--  outputDirectory>doc</outputDirectory--> 
-            		</settings>
-            	</configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>latex</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            
-          <!-- Create documentation zip file. Zip is more convenient than jar as it does not add extra directories -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.0.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.6</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.1.1</version>
 				<configuration>
-					<descriptors>
-						<descriptor>src/main/latex/distribution.xml</descriptor>
-					</descriptors>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>${main.class.package}.${main.class}</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<!-- Generate the worldgenerator.jar -->
+					<execution>
+						<id>worldgenerator</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<archive>
+								<manifest>
+									<addClasspath>true</addClasspath>
+									<mainClass>worldgenerator.RandomWorldGenerator</mainClass>
+								</manifest>
+							</archive>
+							<classifier>worldgenerator</classifier>
+							<excludes>
+								<exclude>**/eishub</exclude>
+								<exclude>**/environment</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<!-- See: http://akquinet.github.io/maven-latex-plugin/ -->
+				<groupId>de.akquinet.jbosscc.latex</groupId>
+				<artifactId>maven-latex-plugin</artifactId>
+				<version>1.2</version>
+				<inherited>false</inherited>
+				<configuration>
+					<settings>
+						<!-- all tex main documents in this folder (including subfolders) will 
+							be processed -->
+						<texDirectory>${basedir}/src/main/latex</texDirectory>
+						<!-- the generated artifacts will be copied to ${project.build.directory}/doc -->
+						<!-- outputDirectory>doc</outputDirectory -->
+					</settings>
 				</configuration>
 				<executions>
 					<execution>
-						<id>make-assembly</id> <!-- this is used for inheritance merges -->
-						<phase>package</phase> <!-- bind to the packaging phase -->
+						<phase>package</phase>
+						<goals>
+							<goal>latex</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>eisinterface.BWEnvironment</mainClass>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
-            
-            
-			
+
 			<plugin>
 				<artifactId>maven-deploy-plugin</artifactId>
 				<version>2.8.1</version>
@@ -205,13 +222,14 @@
 					<altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>com.github.github</groupId>
 				<artifactId>site-maven-plugin</artifactId>
-				<version>0.10</version>
+				<version>0.12</version>
 				<configuration>
-					<message>Maven artifacts for ${project.name} environment version ${project.version}</message>	<!-- git commit message -->
+					<message>Maven artifacts for ${project.name} environment version
+						${project.version}</message>	<!-- git commit message -->
 					<merge>true</merge>
 					<noJekyll>true</noJekyll>									<!-- disable webpage processing -->
 					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
@@ -220,21 +238,32 @@
 						<include>**/*</include>
 					</includes>
 					<repositoryName>mvn-repo</repositoryName>					<!-- github repo name -->
-                	<repositoryOwner>eishub</repositoryOwner>					<!-- github organization -->
-                	<dryrun>true</dryrun>
-                </configuration>
-            	<executions>
-            		<!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
-            		<execution>
-            			<goals>
-            				<goal>site</goal>
-            			</goals>
-            			<phase>deploy</phase>
-            		</execution>
-            	</executions>
-            </plugin>
+					<repositoryOwner>eishub</repositoryOwner>					<!-- github organization -->
+					<dryrun>true</dryrun>
+				</configuration>
+				<executions>
+					<!-- run site-maven-plugin's 'site' target as part of the build's normal 
+						'deploy' phase -->
+					<execution>
+						<goals>
+							<goal>site</goal>
+						</goals>
+						<phase>deploy</phase>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
-
 	</build>
 
+	<profiles>
+		<profile>
+			<id>disable-java8-doclint</id>
+			<activation>
+				<jdk>[1.8,)</jdk>
+			</activation>
+			<properties>
+				<additionalparam>-Xdoclint:none</additionalparam>
+			</properties>
+		</profile>
+	</profiles>
 </project>
