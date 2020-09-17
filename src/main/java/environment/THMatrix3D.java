@@ -17,17 +17,14 @@ package environment;
  */
 /** Translation matrix class */
 public class THMatrix3D extends HMatrix3D {
-	public THMatrix3D(float x, float y, float z) // Three-parameter
-													// constructor
-	{
+	public THMatrix3D(final float x, final float y, final float z) {
 		super();
 		super.m[1][4] = (x);
 		super.m[2][4] = (y);
 		super.m[3][4] = (z);
 	}
 
-	public THMatrix3D(Point3D p) // Point constructor
-	{
+	public THMatrix3D(final Point3D p) {
 		super();
 		super.m[1][4] = (p.getX());
 		super.m[2][4] = (p.getY());
@@ -35,10 +32,8 @@ public class THMatrix3D extends HMatrix3D {
 	}
 }
 
-class RHMatrix3DX extends HMatrix3D // Rotation matrix class
-{
-	public RHMatrix3DX(float Theta) // Constructor, Theta in degrees
-	{
+class RHMatrix3DX extends HMatrix3D {
+	public RHMatrix3DX(final float Theta) {
 		super();
 		super.m[2][2] = (float) Math.cos(Theta * Math.PI / 180);
 		super.m[2][3] = (float) -Math.sin(Theta * Math.PI / 180);
@@ -47,10 +42,8 @@ class RHMatrix3DX extends HMatrix3D // Rotation matrix class
 	}
 }
 
-class RHMatrix3DY extends HMatrix3D // Rotation matrix class
-{
-	public RHMatrix3DY(float Theta) // Constructor, Theta in degrees
-	{
+class RHMatrix3DY extends HMatrix3D {
+	public RHMatrix3DY(final float Theta) {
 		super();
 		super.m[1][1] = (float) Math.cos(Theta * Math.PI / 180);
 		super.m[1][3] = (float) Math.sin(Theta * Math.PI / 180);
@@ -59,10 +52,8 @@ class RHMatrix3DY extends HMatrix3D // Rotation matrix class
 	}
 }
 
-class RHMatrix3DZ extends HMatrix3D // Rotation matrix class
-{
-	public RHMatrix3DZ(float Theta) // Constructor, Theta in degrees
-	{
+class RHMatrix3DZ extends HMatrix3D {
+	public RHMatrix3DZ(final float Theta) {
 		super();
 		super.m[1][1] = (float) Math.cos(Theta * Math.PI / 180);
 		super.m[1][2] = (float) -Math.sin(Theta * Math.PI / 180);

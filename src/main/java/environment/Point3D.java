@@ -24,71 +24,58 @@ public class Point3D {
 	private float y;
 	private float z;
 
-	public Point3D() // Default constructor
-	{
-		x = 0;
-		y = 0;
-		z = 0;
+	public Point3D() {
+		this.x = 0;
+		this.y = 0;
+		this.z = 0;
 	}
 
-	public Point3D(Point3D p) // Copy constructor
-	{
-		x = p.x;
-		y = p.y;
-		z = p.z;
+	public Point3D(final Point3D p) {
+		this.x = p.x;
+		this.y = p.y;
+		this.z = p.z;
 	}
 
-	public Point3D(float a, float b, float c) // General constructor
-	{
-		x = a;
-		y = b;
-		z = c;
+	public Point3D(final float a, final float b, final float c) {
+		this.x = a;
+		this.y = b;
+		this.z = c;
 	}
 
-	public void setX(float a) // Mutator
-	{
-		x = a;
+	public void setX(final float a) {
+		this.x = a;
 	}
 
-	public void setY(float a) // Mutator
-	{
-		y = a;
+	public void setY(final float a) {
+		this.y = a;
 	}
 
-	public void setZ(float a) // Mutator
-	{
-		z = a;
+	public void setZ(final float a) {
+		this.z = a;
 	}
 
-	public float getX() // Accessor
-	{
-		return x;
+	public float getX() {
+		return this.x;
 	}
 
-	public float getY() // Accessor
-	{
-		return y;
+	public float getY() {
+		return this.y;
 	}
 
-	public float getZ() // Accessor
-	{
-		return z;
+	public float getZ() {
+		return this.z;
 	}
 
-	public void transform(HMatrix3D m) // Transform the point
-	{
-		float a = x; // Make copies for correct computation
-		float b = y;
-		float c = z;
-		float d = 1;
+	public void transform(final HMatrix3D m) {
+		// Make copies for correct computation
+		final float a = this.x;
+		final float b = this.y;
+		final float c = this.z;
+		final float d = 1;
 
 		// Multiply the point vector by the transformation matrix:
-		x = m.getElement(1, 1) * a + m.getElement(1, 2) * b
-				+ m.getElement(1, 3) * c + m.getElement(1, 4) * d;
-		y = m.getElement(2, 1) * a + m.getElement(2, 2) * b
-				+ m.getElement(2, 3) * c + m.getElement(2, 4) * d;
-		z = m.getElement(3, 1) * a + m.getElement(3, 2) * b
-				+ m.getElement(3, 3) * c + m.getElement(3, 4);
+		this.x = m.getElement(1, 1) * a + m.getElement(1, 2) * b + m.getElement(1, 3) * c + m.getElement(1, 4) * d;
+		this.y = m.getElement(2, 1) * a + m.getElement(2, 2) * b + m.getElement(2, 3) * c + m.getElement(2, 4) * d;
+		this.z = m.getElement(3, 1) * a + m.getElement(3, 2) * b + m.getElement(3, 3) * c + m.getElement(3, 4);
 	}
-
-} // End of class Point3D
+}

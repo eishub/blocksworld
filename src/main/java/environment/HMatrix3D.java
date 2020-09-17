@@ -22,45 +22,36 @@ package environment;
 public class HMatrix3D {
 	protected float m[][]; // Matrix elements
 
-	public HMatrix3D() // Default constructor
-	{
+	public HMatrix3D() {
 		int i = 0;
 		int j = 0;
-		m = new float[5][5]; // 1-based indexing
-		for (i = 1; i <= 4; i++) // rows
-		{
-			for (j = 1; j <= 4; j++) // columns
-			{
+		this.m = new float[5][5]; // 1-based indexing
+		for (i = 1; i <= 4; i++) {// rows
+			for (j = 1; j <= 4; j++) {// columns
 				if (i == j) {
-					m[i][j] = 1;
+					this.m[i][j] = 1;
 				} else {
-					m[i][j] = 0; // Identity matrix by default
+					this.m[i][j] = 0; // Identity matrix by default
 				}
 			}
 		}
-	} // End of constructor
-
-	public void setElement(int i, int j, float a) // Mutator
-	{
-		m[i][j] = a;
 	}
 
-	public float getElement(int i, int j) // Accessor
-	{
-		return m[i][j];
+	public void setElement(final int i, final int j, final float a) {
+		this.m[i][j] = a;
 	}
 
-	public HMatrix3D multiply(HMatrix3D A, HMatrix3D B) // Post-multiply by
-														// another matrix
-	{
-		HMatrix3D C = new HMatrix3D(); // New matrix to return
+	public float getElement(final int i, final int j) {
+		return this.m[i][j];
+	}
+
+	public HMatrix3D multiply(final HMatrix3D A, final HMatrix3D B) { // Post-multiply by another matrix
+		final HMatrix3D C = new HMatrix3D(); // New matrix to return
 		int i = 0;
 		int j = 0;
 		int k = 0;
-		for (i = 1; i <= 4; i++) // rows
-		{
-			for (j = 1; j <= 4; j++) // columns
-			{
+		for (i = 1; i <= 4; i++) { // rows
+			for (j = 1; j <= 4; j++) { // columns
 				C.m[i][j] = 0;
 				for (k = 1; k <= 4; k++) {
 					C.m[i][j] += A.m[i][k] * B.m[k][j];
@@ -69,5 +60,4 @@ public class HMatrix3D {
 		}
 		return C;
 	}
-
-} // End of class HMatrix3D
+}

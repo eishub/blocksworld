@@ -27,14 +27,16 @@ import java.awt.Polygon;
  * itself.
  */
 public class Cube3D {
-	private Square3D F[]; // Face array
-	private Point3D centerPoint; // For distance calculations
-	private Color BlockColor = Color.getHSBColor((float) Math.random(),
-			(float) Math.random(), 1f); // The block knows its own color
-	private boolean bTopBlock; // Not any blocks on top of it, true by
-								// default
-	private Cube3D iOnBlock; // Index of the block this one rests on, null by
-								// default
+	// Face array
+	private Square3D F[];
+	// For distance calculations
+	private Point3D centerPoint;
+	// The block knows its own color
+	private Color BlockColor = Color.getHSBColor((float) Math.random(), (float) Math.random(), 1f);
+	// Not any blocks on top of it, true by default
+	private boolean bTopBlock;
+	// Index of the block this one rests on, null by default
+	private Cube3D iOnBlock;
 	private boolean selected;
 	private int blockNumber;
 	private Point3D frontFaceCenter;
@@ -43,7 +45,7 @@ public class Cube3D {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + blockNumber;
+		result = prime * result + this.blockNumber;
 		return result;
 	}
 
@@ -51,28 +53,32 @@ public class Cube3D {
 	 * Blocks are equal if their BLOCK NUMBER is equal. The rest is irrelevant.
 	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(final Object obj) {
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		} else if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		} else if (getClass() != obj.getClass()) {
 			return false;
-		Cube3D other = (Cube3D) obj;
-		if (blockNumber != other.blockNumber)
+		}
+
+		final Cube3D other = (Cube3D) obj;
+		if (this.blockNumber != other.blockNumber) {
 			return false;
+		}
+
 		return true;
 	}
 
 	/*
-	 * 
+	 *
 	 * Construct block having number i.
 	 */
-	public Cube3D(int i) {
+	public Cube3D(final int i) {
 		if (i <= 0) {
 			throw new IllegalArgumentException("illegal block number " + i);
 		}
-		blockNumber = i;
+		this.blockNumber = i;
 		reset();
 	}
 
@@ -81,100 +87,91 @@ public class Cube3D {
 	 * properties, so block is blank and on table after reset.
 	 */
 	public synchronized void reset() {
-		bTopBlock = true;
-		iOnBlock = null;
+		this.bTopBlock = true;
+		this.iOnBlock = null;
 
 		Point3D V[];
-		centerPoint = new Point3D(0, -50, 0); // 50 units above origin, -Y
-												// is up
-
-		frontFaceCenter = new Point3D(0, -50, 50); // center of front face.
+		// 50 units above origin, -Y is up
+		this.centerPoint = new Point3D(0, -50, 0);
+		// center of front face.
+		this.frontFaceCenter = new Point3D(0, -50, 50);
 
 		V = new Point3D[5];
-		F = new Square3D[7];
+		this.F = new Square3D[7];
 
 		V[1] = new Point3D(50, -100, 50); // Front face
 		V[2] = new Point3D(-50, -100, 50);
 		V[3] = new Point3D(-50, 0, 50);
 		V[4] = new Point3D(50, 0, 50);
-		F[1] = new Square3D(V);
+		this.F[1] = new Square3D(V);
 
 		V[1] = new Point3D(50, -100, -50); // Right face
 		V[2] = new Point3D(50, -100, 50);
 		V[3] = new Point3D(50, 0, 50);
 		V[4] = new Point3D(50, 0, -50);
-		F[2] = new Square3D(V);
+		this.F[2] = new Square3D(V);
 
 		V[1] = new Point3D(-50, -100, -50); // Back face
 		V[2] = new Point3D(50, -100, -50);
 		V[3] = new Point3D(50, 0, -50);
 		V[4] = new Point3D(-50, 0, -50);
-		F[3] = new Square3D(V);
+		this.F[3] = new Square3D(V);
 
 		V[1] = new Point3D(-50, -100, 50); // Left face
 		V[2] = new Point3D(-50, -100, -50);
 		V[3] = new Point3D(-50, 0, -50);
 		V[4] = new Point3D(-50, 0, 50);
-		F[4] = new Square3D(V);
+		this.F[4] = new Square3D(V);
 
 		V[1] = new Point3D(50, -100, -50); // Top face
 		V[2] = new Point3D(-50, -100, -50);
 		V[3] = new Point3D(-50, -100, 50);
 		V[4] = new Point3D(50, -100, 50);
-		F[5] = new Square3D(V);
+		this.F[5] = new Square3D(V);
 
 		V[1] = new Point3D(50, 0, -50); // Top face
 		V[2] = new Point3D(50, 0, 50);
 		V[3] = new Point3D(-50, 0, 50);
 		V[4] = new Point3D(-50, 0, -50);
-		F[6] = new Square3D(V);
+		this.F[6] = new Square3D(V);
 	}
 
-	public Cube3D(Cube3D c) // Copyconstructor
-	{
+	public Cube3D(final Cube3D c) {
 		int i;
-		bTopBlock = c.bTopBlock;
-		iOnBlock = c.iOnBlock;
-		BlockColor = c.BlockColor;
-		centerPoint = new Point3D(c.centerPoint);
-		frontFaceCenter = new Point3D(c.frontFaceCenter);
-		F = new Square3D[7];
+		this.bTopBlock = c.bTopBlock;
+		this.iOnBlock = c.iOnBlock;
+		this.BlockColor = c.BlockColor;
+		this.centerPoint = new Point3D(c.centerPoint);
+		this.frontFaceCenter = new Point3D(c.frontFaceCenter);
+		this.F = new Square3D[7];
 		for (i = 1; i <= 6; i++) {
-			F[i] = new Square3D(c.F[i]);
+			this.F[i] = new Square3D(c.F[i]);
 		}
 	}
 
-	public synchronized void transform(HMatrix3D m) // transform the cube
-	{
-		centerPoint.transform(m);
-		frontFaceCenter.transform(m);
+	public synchronized void transform(final HMatrix3D m) {
+		this.centerPoint.transform(m);
+		this.frontFaceCenter.transform(m);
 		int i = 0;
 		for (i = 1; i <= 6; i++) {
-			F[i].transform(m);
+			this.F[i].transform(m);
 		}
 	}
 
-	// Get the square of the distance from the center of the cube to some
-	// point:
-	public float getDSquared(Point3D p) {
-		float sfDSquared;
-		sfDSquared = (centerPoint.getX() - p.getX())
-				* (centerPoint.getX() - p.getX())
-				+ (centerPoint.getY() - p.getY())
-				* (centerPoint.getY() - p.getY())
-				+ (centerPoint.getZ() - p.getZ())
-				* (centerPoint.getZ() - p.getZ());
-		return sfDSquared; // Distance squared from the cube to the point
+	public float getDSquared(final Point3D p) {
+		// Get the square of the distance from the center of the cube to some point:
+		return (this.centerPoint.getX() - p.getX()) * (this.centerPoint.getX() - p.getX())
+				+ (this.centerPoint.getY() - p.getY()) * (this.centerPoint.getY() - p.getY())
+				+ (this.centerPoint.getZ() - p.getZ()) * (this.centerPoint.getZ() - p.getZ());
 	}
 
 	public Point3D getCenterPoint() {
-		return new Point3D(centerPoint); // Return a copy of the center
-											// point of the cube
+		return new Point3D(this.centerPoint); // Return a copy of the center point of the cube
 	}
 
 	// The cube paints itself:
-	public synchronized void paint(Graphics g, HMatrix3D pxf, Point3D vp,
-			float sfFocalLength, int width, int height) {
+	public synchronized void paint(final Graphics g, final HMatrix3D pxf, final Point3D vp, final float sfFocalLength,
+			final int width, final int height) {
 		int i;
 		int j;
 		Polygon Pgon;
@@ -188,44 +185,34 @@ public class Cube3D {
 		float sfDSQj;
 
 		// Sort the faces on distance from the viewpoint:
-		for (i = 1; i <= 5; i++) // This fixed loop bubble sort is good
-									// enough
-		{ // for a simple cube. More general applications
-			for (j = i + 1; j <= 6; j++) // will use a faster sort
-											// algorithm.
-			{
+		// This fixed loop bubble sort is good enough for a simple cube.
+		for (i = 1; i <= 5; i++) {
+			for (j = i + 1; j <= 6; j++) {
 				// Put most distant first:
-				sfDSQi = F[i].getDSquared(vp); // Distance from the face to
-												// the viewpoint
-				sfDSQj = F[j].getDSquared(vp);
+				// Distance from the face to the viewpoint
+				sfDSQi = this.F[i].getDSquared(vp);
+				sfDSQj = this.F[j].getDSquared(vp);
 				if (sfDSQj > sfDSQi) {
-					F[0] = F[j]; // Use the zeroeth face for swap space
-					F[j] = F[i];
-					F[i] = F[0];
+					this.F[0] = this.F[j]; // Use the zeroeth face for swap space
+					this.F[j] = this.F[i];
+					this.F[i] = this.F[0];
 				}
 			}
 		}
 		// Render the faces to the applet panel:
 		for (i = 1; i <= 6; i++) // For each face
 		{
-			// Establish a front clipping plane so we don't render faces
-			// behind us:
-			TempPoint = F[i].getPoint(0); // Center point of the face
+			// Establish a front clipping plane so we don't render faces behind us:
+			TempPoint = this.F[i].getPoint(0); // Center point of the face
 			TempPoint.transform(pxf);
 			if (TempPoint.getZ() < -100) {
-				for (j = 1; j <= 4; j++) // For each point of the face
-				{
-					TempPoint = F[i].getPoint(j);
+				for (j = 1; j <= 4; j++) { // For each point of the face
+					TempPoint = this.F[i].getPoint(j);
 					TempPoint.transform(pxf);
-					sfAdjust = sfFocalLength / TempPoint.getZ(); // Adjust x
-																	// and y
-																	// for
-																	// perspective
-																	// view
-					x[j - 1] = width / 2
-							+ ((int) (TempPoint.getX() * sfAdjust));
-					y[j - 1] = height / 2
-							- ((int) (TempPoint.getY() * sfAdjust));
+					// Adjust x and y for perspective view
+					sfAdjust = sfFocalLength / TempPoint.getZ();
+					x[j - 1] = width / 2 + ((int) (TempPoint.getX() * sfAdjust));
+					y[j - 1] = height / 2 - ((int) (TempPoint.getY() * sfAdjust));
 				}
 				Pgon = new Polygon(x, y, 4);
 				g.setColor(getBlockColor());
@@ -235,77 +222,68 @@ public class Cube3D {
 			}
 		}
 
-		TempPoint = new Point3D(frontFaceCenter);
+		TempPoint = new Point3D(this.frontFaceCenter);
 		TempPoint.transform(pxf);
 		sfAdjust = sfFocalLength / TempPoint.getZ();
-		/*
-		 * Adjust x and y for perspective view
-		 */
+		// Adjust x and y for perspective view
 		int xs = width / 2 + ((int) (TempPoint.getX() * sfAdjust));
 		int ys = height / 2 - ((int) (TempPoint.getY() * sfAdjust));
 		// and center
-		String text = "" + blockNumber;
-		FontMetrics fm = g.getFontMetrics();
+		final String text = "" + this.blockNumber;
+		final FontMetrics fm = g.getFontMetrics();
 		xs -= fm.stringWidth(text) / 2;
 		ys += fm.getAscent() / 2;
 		g.setFont(new Font("default", Font.BOLD, 12));
 		g.drawString(text, xs, ys);
+	}
 
-	} // End of Cube3D paint()
-
-	public Color getBlockColor() // Accessor
-	{
-		if (selected) {
-			return BlockColor.darker();
+	public Color getBlockColor() {
+		if (this.selected) {
+			return this.BlockColor.darker();
+		} else {
+			return this.BlockColor;
 		}
-		return BlockColor;
 
 	}
 
-	public boolean topBlock() // Accessor
-	{
-		return bTopBlock;
+	public boolean topBlock() {
+		return this.bTopBlock;
 	}
 
-	public void setTopBlock(boolean v) // Mutator
-	{
-		bTopBlock = v;
+	public void setTopBlock(final boolean v) {
+		this.bTopBlock = v;
 	}
 
 	/**
 	 * get the block that this block rests on.
-	 * 
+	 *
 	 * @return
 	 */
-	public Cube3D getOnBlock() // Accessor
-	{
-		return iOnBlock;
+	public Cube3D getOnBlock() {
+		return this.iOnBlock;
 	}
 
-	public void setOnBlock(Cube3D i) // Mutator
-	{
-		iOnBlock = i;
+	public void setOnBlock(final Cube3D i) {
+		this.iOnBlock = i;
 	}
 
 	/**
 	 * set the block to selected or deselected. This changes the color to a bit
 	 * darker shade.
-	 * 
-	 * @param b
-	 *            true to select, false to deselect.
+	 *
+	 * @param b true to select, false to deselect.
 	 */
-	public void setSelected(boolean b) {
-		selected = b;
+	public void setSelected(final boolean b) {
+		this.selected = b;
 
 	}
 
 	/**
 	 * get the block number
-	 * 
+	 *
 	 * @return block number
 	 */
 	public int getNumber() {
-		return blockNumber;
+		return this.blockNumber;
 	}
-
 }
