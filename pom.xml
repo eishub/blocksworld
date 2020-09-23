@@ -5,7 +5,7 @@
 
 	<groupId>eishub</groupId>
 	<artifactId>blocksworld</artifactId>
-	<version>1.2.3-SNAPSHOT</version>
+	<version>1.3.0</version>
 	<name>blocksworld</name>
 	<description>The classic Blocks World from AI with an interactive user interface.</description>
 	<url>http://github.com/eishub/blocksworld/</url>
