@@ -12,12 +12,6 @@ Releases can be found [here](https://github.com/eishub/blocksworld/releases) and
 
 Releases can also be found in eishub's maven repository  [here](https://github.com/eishub/mvn-repo/tree/master/eishub/blocksworld).
 
-## Generate Jars from Source
-
-Run `mvn clean install`
-
-Run `mvn clean pre-site install` to also generate the pdf manual from the tex source.
-
 Dependency information 
 =====================
 
@@ -32,7 +26,6 @@ Dependency information
 <dependency>
 	<groupId>eishub</groupId>
 	<artifactId>blocksworld</artifactId>
-	<version>1.2.0</version>
+	<version>1.3.0</version>
 </dependency>
 ```
-
